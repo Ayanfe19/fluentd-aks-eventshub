@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: fluentd
+  labels:
+    app: fluentd
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: fluentd
+  template:
+    metadata:
+      labels:
+        app: fluentd
+    spec:
+      containers:
+      - name: fluentd
+        image: fluent/fluentd:v1.12-1
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+        volumeMounts:
+        - name: config
+          mountPath: /fluentd/etc/
+        - name: log
+          mountPath: /fluentd/log/
+      volumes:
+      - name: config
+        configMap:
+          name: fluentd-config
+      - name: log
+        emptyDir: {}
