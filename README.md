@@ -44,7 +44,7 @@ Note: You can modify the Fluentd configuration file as per your requirements to 
 
 
 
-#### Fluentd PLugin Installation guide
+### Fluentd PLugin Installation guide
 
 Add the Azure Event Hub plugin repository to Helm using the following command:
 
