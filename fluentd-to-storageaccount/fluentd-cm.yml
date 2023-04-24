@@ -24,9 +24,9 @@ data:
 
     <match **>
       @type azure-storage-append-blob
-      azure_storage_account    qradardemo
-      azure_storage_access_key IqPXeVfL+PcJDUmsXqH5F2LPizbX2mTW5gUZ7e1sf4qQbShk0oPf+alq+mFgK6orKGFBk/mXkV+/+AStJwLaGA==
-      azure_container          qradardemo
+      azure_storage_account    
+      azure_storage_access_key 
+      azure_container          
       auto_create_container    true
       path logs/
       azure_object_key_format  %{path}%{time_slice}_%{index}.log
