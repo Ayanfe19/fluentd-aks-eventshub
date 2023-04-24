@@ -60,15 +60,15 @@ spec:
         imagePullPolicy: Always
         env:
           - name:  AZUREBLOB_ACCOUNT_NAME
-            value: "qradardemo"
+            value: ""
           - name:  AZUREBLOB_ACCOUNT_KEY
-            value: "IqPXeVfL+PcJDUmsXqH5F2LPizbX2mTW5gUZ7e1sf4qQbShk0oPf+alq+mFgK6orKGFBk/mXkV+/+AStJwLaGA=="
+            value: ""
           - name:  AZUREBLOB_SAS_TOKEN
-            value: "?sv=2021-12-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2023-05-01T19:57:06Z&st=2023-04-24T11:57:06Z&spr=https&sig=qr9u4UwhwI%2FfQiDpa5aC1jFLOF8LvS7AKcSw9sP4thQ%3D"
+            value: ""
           - name:  AZUREBLOB_CONTAINER
-            value: "qradardemo"
+            value: ""
           - name:  AZUREBLOB_LOG_PATH
-            value: "mylogpath"
+            value: ""
         resources:
           limits:
             memory: 200Mi
