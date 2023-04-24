@@ -11,6 +11,18 @@ data:
       bind 0.0.0.0
     </source>
 
+    <source>
+      @type docker
+      @id input_docker_logs
+      @log_level debug
+      @include_tags true
+      @tail_container true
+      @read_from_head true
+      <parse>
+        @type json
+      </parse>
+    </source>
+
     <match **>
       @type azureeventhubs
       connection_string "Endpoint=sb://kula-eventhub-ns.servicebus.windows.net/;SharedAccessKeyName=kula-qradar;SharedAccessKey=X8YoNaLdf4Myf0T0hzMcn+M5ByKkjW9DI+AEhGFDJ1g=;EntityPath=kula-eventhub-instance"

@@ -4,20 +4,38 @@ metadata:
   name: fluentd-aksconfig
 data:
   fluentd.conf: |
+    <source>
+      @type forward
+      port 24224
+      bind 0.0.0.0
+    </source>
+
+    <source>
+      @type docker
+      @id input_docker_logs
+      @log_level debug
+      @include_tags true
+      @tail_container true
+      @read_from_head true
+      <parse>
+        @type json
+      </parse>
+    </source>
+
     <match **>
-          @type azure-storage-append-blob
-          azure_storage_account    mystorageaccount
-          azure_storage_access_key myaccesskey
-          azure_container          aksfluentd
-          auto_create_container    true
-          path logs/
-          azure_object_key_format  %{path}%{time_slice}_%{index}.log
-          time_slice_format        %Y%m%d-%H
-          <buffer time>
-            @type file
-            path /var/log/fluent/azurestorageappendblob
-            timekey 120 # 2 minutes
-            timekey_wait 60
-            timekey_use_utc true # use utc
-          </buffer>
+      @type azure-storage-append-blob
+      azure_storage_account    qradardemo
+      azure_storage_access_key IqPXeVfL+PcJDUmsXqH5F2LPizbX2mTW5gUZ7e1sf4qQbShk0oPf+alq+mFgK6orKGFBk/mXkV+/+AStJwLaGA==
+      azure_container          qradardemo
+      auto_create_container    true
+      path logs/
+      azure_object_key_format  %{path}%{time_slice}_%{index}.log
+      time_slice_format        %Y%m%d-%H
+      <buffer time>
+        @type file
+        path /var/log/fluent/azurestorageappendblob
+        timekey 120 # 2 minutes
+        timekey_wait 60
+        timekey_use_utc true # use utc
+      </buffer>
     </match> 
