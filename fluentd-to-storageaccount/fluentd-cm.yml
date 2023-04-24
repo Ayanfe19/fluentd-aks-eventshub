@@ -1,0 +1,23 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: fluentd-aksconfig
+data:
+  fluentd.conf: |
+    <match **>
+          @type azure-storage-append-blob
+          azure_storage_account    mystorageaccount
+          azure_storage_access_key myaccesskey
+          azure_container          aksfluentd
+          auto_create_container    true
+          path logs/
+          azure_object_key_format  %{path}%{time_slice}_%{index}.log
+          time_slice_format        %Y%m%d-%H
+          <buffer time>
+            @type file
+            path /var/log/fluent/azurestorageappendblob
+            timekey 120 # 2 minutes
+            timekey_wait 60
+            timekey_use_utc true # use utc
+          </buffer>
+    </match> 

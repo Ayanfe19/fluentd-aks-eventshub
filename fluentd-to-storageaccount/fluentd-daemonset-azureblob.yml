@@ -1,0 +1,91 @@
+---
+apiVersion: v1
+kind: ServiceAccount
+metadata:
+  name: fluentd
+---
+apiVersion: rbac.authorization.k8s.io/v1beta1
+kind: ClusterRole
+metadata:
+  name: fluentd
+rules:
+- apiGroups:
+  - ""
+  resources:
+  - pods
+  - namespaces
+  verbs:
+  - get
+  - list
+  - watch
+---
+kind: ClusterRoleBinding
+apiVersion: rbac.authorization.k8s.io/v1beta1
+metadata:
+  name: fluentd
+roleRef:
+  kind: ClusterRole
+  name: fluentd
+  apiGroup: rbac.authorization.k8s.io
+subjects:
+- kind: ServiceAccount
+  name: fluentd
+---
+apiVersion: apps/v1
+kind: DaemonSet
+metadata:
+  name: fluentd-azureblob
+  labels:
+    k8s-app: fluentd-logging
+    version: v1
+spec:
+  selector:
+    matchLabels:
+      k8s-app: fluentd-logging
+      version: v1
+  template:
+    metadata:
+      labels:
+        k8s-app: fluentd-logging
+        version: v1
+    spec:
+      serviceAccount: fluentd
+      serviceAccountName: fluentd
+      tolerations:
+      - key: node-role.kubernetes.io/master
+        effect: NoSchedule
+      containers:
+      - name: fluentd-azureblob
+        image: fluent/fluentd-kubernetes-daemonset:v1-debian-azureblob
+        imagePullPolicy: Always
+        env:
+          - name:  AZUREBLOB_ACCOUNT_NAME
+            value: "qradardemo"
+          - name:  AZUREBLOB_ACCOUNT_KEY
+            value: "IqPXeVfL+PcJDUmsXqH5F2LPizbX2mTW5gUZ7e1sf4qQbShk0oPf+alq+mFgK6orKGFBk/mXkV+/+AStJwLaGA=="
+          - name:  AZUREBLOB_SAS_TOKEN
+            value: "?sv=2021-12-02&ss=bfqt&srt=sco&sp=rwdlacupiytfx&se=2023-05-01T19:57:06Z&st=2023-04-24T11:57:06Z&spr=https&sig=qr9u4UwhwI%2FfQiDpa5aC1jFLOF8LvS7AKcSw9sP4thQ%3D"
+          - name:  AZUREBLOB_CONTAINER
+            value: "qradardemo"
+          - name:  AZUREBLOB_LOG_PATH
+            value: "mylogpath"
+        resources:
+          limits:
+            memory: 200Mi
+          requests:
+            cpu: 100m
+            memory: 200Mi
+        volumeMounts:
+        - name: varlog
+          mountPath: /var/log
+        - name: varlibdockercontainers
+          mountPath: /var/lib/docker/containers
+          readOnly: true
+      terminationGracePeriodSeconds: 30
+      volumes:
+      - name: varlog
+        hostPath:
+          path: /var/log
+      - name: varlibdockercontainers
+        hostPath:
+          path: /var/lib/docker/containers
