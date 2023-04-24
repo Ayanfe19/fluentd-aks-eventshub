@@ -15,15 +15,20 @@ spec:
         app: fluentd
     spec:
       containers:
-        - name: fluentd
-          image: fluent/fluentd-kubernetes-daemonset:v1.4.2-debian-elasticsearch-1.1
-          resources:
-            limits:
-              memory: "2Gi"
-          volumeMounts:
-            - name: varlog
-              mountPath: /var/log
+      - name: fluentd
+        image: fluent/fluentd:v1.12-1
+        resources:
+          limits:
+            cpu: "1"
+            memory: "1Gi"
+        volumeMounts:
+        - name: config
+          mountPath: /fluentd/etc/
+        - name: log
+          mountPath: /fluentd/log/
       volumes:
-        - name: varlog
-          hostPath:
-            path: /var/log
+      - name: config
+        configMap:
+          name: fluentd-config
+      - name: log
+        emptyDir: {}
